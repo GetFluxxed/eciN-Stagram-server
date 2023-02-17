@@ -92,4 +92,23 @@ router.get('/auth-locked', authLockedRoute, (req, res) => {
     res.json({ msg: 'welcome to the private route!' })
 })
 
+router.post('/:id/follow', async function (req, res) {
+    try {
+        const user = await db.user.findByPk(req.params.userId)
+
+        const followerId = req.body.userId
+
+        if (user.following.includes(followerId)) {
+            return res.status(400).json({ msg: "You cannot unfollow them, be nice" })
+        }
+
+        user.following.push(followerId)
+
+        return res.status(200).json({ msg: 'Keep being nice!!' })
+
+    } catch (err) {
+        console.log(err)
+    }
+})
+
 module.exports = router
